@@ -8,13 +8,13 @@ import (
 )
 
 type LoginData struct {
-	username string `json:"username"`
-	password string `json:"password"`
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 type User struct {
-	loginData LoginData `json:"loginData"`
-	name      string    `json:"name"`
+	LoginData LoginData `json:"loginData"`
+	Name      string    `json:"name"`
 }
 
 func main() {
@@ -33,6 +33,7 @@ func helloHandler(c *gin.Context) {
 func registerHandler(c *gin.Context) {
 	var user User
 	if err := c.BindJSON(&user); err != nil {
+		c.String(http.StatusBadRequest, "Something went wrong")
 		return
 	}
 	c.String(http.StatusOK, "success")
@@ -43,6 +44,7 @@ func loginHandler(c *gin.Context) {
 	loginErr := c.ShouldBindJSON(&loginData)
 	fmt.Println(loginErr)
 	if loginErr != nil {
+		c.String(http.StatusBadRequest, "Something went wrong")
 		return
 	}
 	c.String(http.StatusOK, "success")
