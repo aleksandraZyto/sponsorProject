@@ -4,20 +4,15 @@ import (
 	"fmt"
 	"net/http"
 
+	database "sponsorProject/database"
+	models "sponsorProject/models"
+
 	"github.com/gin-gonic/gin"
 )
 
-type LoginData struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-type User struct {
-	LoginData LoginData `json:"loginData"`
-	Name      string    `json:"name"`
-}
-
 func main() {
+	database.ConnectDb()
+
 	router := gin.Default()
 	router.POST("/register", registerHandler)
 	router.POST("/login", loginHandler)
@@ -31,7 +26,7 @@ func helloHandler(c *gin.Context) {
 }
 
 func registerHandler(c *gin.Context) {
-	var user User
+	var user models.User
 	if err := c.BindJSON(&user); err != nil {
 		c.String(http.StatusBadRequest, "Something went wrong")
 		return
@@ -40,7 +35,7 @@ func registerHandler(c *gin.Context) {
 }
 
 func loginHandler(c *gin.Context) {
-	var loginData LoginData
+	var loginData models.LoginData
 	loginErr := c.ShouldBindJSON(&loginData)
 	fmt.Println(loginErr)
 	if loginErr != nil {
