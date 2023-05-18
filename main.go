@@ -4,15 +4,12 @@ import (
 	"fmt"
 	"net/http"
 
-	database "sponsorProject/database"
 	models "sponsorProject/models"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	database.ConnectDb()
-
 	router := gin.Default()
 	router.POST("/register", registerHandler)
 	router.POST("/login", loginHandler)
