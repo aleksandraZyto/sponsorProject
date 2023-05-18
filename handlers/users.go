@@ -38,10 +38,15 @@ func LoginHandler(c *fiber.Ctx) error {
 		return err
 	}
 
-	database.DB.Db.Where("username = ?", payload.Username).First(&user)
-	// user with that name not found - 404
-	// user exists and password is correct - 200
-	// user exists but passowrd incorrect - 204
+	if err := database.DB.Db.Where("username = ?", payload.Username).First(&user).Error; err != nil {
+		return c.Status(fiber.StatusNotFound).SendString("Username not found")
+	}
+
+	if payload.Password != user.Password {
+		return c.Status(401).SendString("Password incorrect")
+	}
+
+	fmt.Println("ussseeer:", user)
 
 	return c.Status(200).JSON(user)
 }
