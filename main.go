@@ -1,43 +1,13 @@
 package main
 
-import (
-	"fmt"
-	"net/http"
-
-	models "sponsorProject/models"
-
-	"github.com/gin-gonic/gin"
-)
+import "github.com/gofiber/fiber/v2"
 
 func main() {
-	router := gin.Default()
-	router.POST("/register", registerHandler)
-	router.POST("/login", loginHandler)
-	router.GET("/hello", helloHandler)
+	app := fiber.New()
 
-	router.Run("localhost:8080")
-}
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("Hey there")
+	})
 
-func helloHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, "Hello")
-}
-
-func registerHandler(c *gin.Context) {
-	var user models.User
-	if err := c.BindJSON(&user); err != nil {
-		c.String(http.StatusBadRequest, "Something went wrong")
-		return
-	}
-	c.String(http.StatusOK, "success")
-}
-
-func loginHandler(c *gin.Context) {
-	var loginData models.LoginData
-	loginErr := c.ShouldBindJSON(&loginData)
-	fmt.Println(loginErr)
-	if loginErr != nil {
-		c.String(http.StatusBadRequest, "Something went wrong")
-		return
-	}
-	c.String(http.StatusOK, "success")
+	app.Listen(":3000")
 }
