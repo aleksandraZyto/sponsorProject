@@ -4,13 +4,7 @@ import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	Name        string `json:"name"`
-	LoginDataID int
-	LoginData   LoginData `json:"login_data"`
-}
-
-type LoginData struct {
-	ID       int
 	Username string `json:"username"`
+	Name     string `json:"name"`
 	Password string `json:"password"`
 }

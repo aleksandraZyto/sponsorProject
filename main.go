@@ -20,5 +20,6 @@ func main() {
 func setupRoutes(app *fiber.App) {
 	app.Get("/hello", handlers.Home)
 	app.Post("/register", handlers.RegistrationHandler)
+	app.Post("/login", handlers.LoginHandler)
 
 }
