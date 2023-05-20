@@ -9,7 +9,12 @@ import (
 )
 
 func Home(c *fiber.Ctx) error {
-	return c.SendString("Its working")
+	json := models.User{
+		Name:     "haha",
+		Password: "sdfsd",
+		Username: "ola",
+	}
+	return c.Status(200).JSON(json)
 }
 
 func RegistrationHandler(c *fiber.Ctx) error {
