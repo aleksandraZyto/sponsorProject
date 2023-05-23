@@ -11,15 +11,13 @@ func CreateApp(handler handlers.UserHandler) *fiber.App {
 
 	app.Post("/register", func(c *fiber.Ctx) error {
 		req := new(handlers.RegisterRequest)
-		handler.Register(req)
-		return c.Status(200).SendString("Done")
+		if err := c.BodyParser(req); err != nil {
+			return c.Status(400).SendString("Invalid payload")
+		}
+
+		user := handler.Register(req)
+		return c.Status(200).JSON(user)
 	})
 
 	return app
-}
-
-func SetupRoutes(app *fiber.App) {
-	app.Get("/hello", handlers.Home)
-	app.Post("/register", handlers.RegistrationHandler)
-	app.Post("/login", handlers.LoginHandler)
 }

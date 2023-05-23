@@ -4,15 +4,14 @@ import (
 	database "chat-app/database"
 	models "chat-app/models"
 	"encoding/base64"
-	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type RegisterRequest struct {
-	name     string `json: "name"`
-	password string `json: "password"`
-	username string `json: "username"`
+	Username string `json:"username"`
+	Name     string `json:"name"`
+	Password string `json:"password"` // these have to be capital, otherwise body parser wont work
 }
 
 type UserHandler interface {
@@ -22,22 +21,14 @@ type UserHandler interface {
 type UserHandlerStruct struct{}
 
 func (handler *UserHandlerStruct) Register(req *RegisterRequest) models.User {
-	fmt.Println(req)
-	return models.User{Name: "Mock", Password: "mock", Username: "mock"}
-}
-
-func RegistrationHandler(c *fiber.Ctx) error {
-	user := new(models.User)
-	if err := c.BodyParser(user); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": err.Error(),
-		})
+	req.Password = base64.StdEncoding.EncodeToString([]byte(req.Password))
+	user := models.User{
+		Name:     req.Name,
+		Username: req.Username,
+		Password: req.Password,
 	}
-
-	user.Password = base64.StdEncoding.EncodeToString([]byte(user.Password))
 	database.DB.Db.Create(&user)
-
-	return c.Status(200).JSON(user)
+	return user
 }
 
 func Home(c *fiber.Ctx) error {

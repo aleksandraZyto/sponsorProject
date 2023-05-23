@@ -7,10 +7,7 @@ import (
 
 func main() {
 	database.ConnectDb()
-	// app := fiber.New()
-	// SetupRoutes(app)
-	// app.Listen(":3000")
 
-	alterApp := CreateApp(&handlers.UserHandlerStruct{})
-	alterApp.Listen(":3000")
+	app := CreateApp(&handlers.UserHandlerStruct{})
+	app.Listen(":3000")
 }
