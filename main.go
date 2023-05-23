@@ -2,15 +2,15 @@ package main
 
 import (
 	database "chat-app/database"
-
-	"github.com/gofiber/fiber/v2"
+	"chat-app/handlers"
 )
 
 func main() {
 	database.ConnectDb()
-	app := fiber.New()
+	// app := fiber.New()
+	// SetupRoutes(app)
+	// app.Listen(":3000")
 
-	SetupRoutes(app)
-
-	app.Listen(":3000")
+	alterApp := CreateApp(&handlers.UserHandlerStruct{})
+	alterApp.Listen(":3000")
 }

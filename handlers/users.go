@@ -4,17 +4,26 @@ import (
 	database "chat-app/database"
 	models "chat-app/models"
 	"encoding/base64"
+	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func Home(c *fiber.Ctx) error {
-	json := models.User{
-		Name:     "haha",
-		Password: "sdfsd",
-		Username: "ola",
-	}
-	return c.Status(200).JSON(json)
+type RegisterRequest struct {
+	name     string `json: "name"`
+	password string `json: "password"`
+	username string `json: "username"`
+}
+
+type UserHandler interface {
+	Register(req *RegisterRequest) models.User
+}
+
+type UserHandlerStruct struct{}
+
+func (handler *UserHandlerStruct) Register(req *RegisterRequest) models.User {
+	fmt.Println(req)
+	return models.User{Name: "Mock", Password: "mock", Username: "mock"}
 }
 
 func RegistrationHandler(c *fiber.Ctx) error {
@@ -29,6 +38,15 @@ func RegistrationHandler(c *fiber.Ctx) error {
 	database.DB.Db.Create(&user)
 
 	return c.Status(200).JSON(user)
+}
+
+func Home(c *fiber.Ctx) error {
+	json := models.User{
+		Name:     "haha",
+		Password: "sdfsd",
+		Username: "ola",
+	}
+	return c.Status(200).JSON(json)
 }
 
 func LoginHandler(c *fiber.Ctx) error {
