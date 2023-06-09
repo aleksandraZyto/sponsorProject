@@ -18,13 +18,18 @@ type Dbinstance struct {
 
 var DB Dbinstance
 
-func ConnectDb() {
+func ConnectDb() error {
+	user := os.Getenv("DB_USER")
+	pass := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
 	dsn := fmt.Sprintf(
 		"host=db user=%s password=%s dbname=%s port=5432 sslmode=disable TimeZone=Asia/Shanghai",
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASSWORD"),
-		os.Getenv("DB_NAME"),
+		user,
+		pass,
+		dbName,
 	)
+
+	fmt.Println("DSN:", dsn)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
@@ -32,11 +37,10 @@ func ConnectDb() {
 
 	if err != nil {
 		log.Fatal("Failed to connect to database. \n", err)
-		os.Exit(2)
+		return err
 	}
 
 	log.Println("connected")
-	db.Logger = logger.Default.LogMode(logger.Info)
 
 	log.Println("running migrations")
 	db.AutoMigrate(&models.User{})
@@ -46,4 +50,5 @@ func ConnectDb() {
 		Db: db,
 	}
 
+	return nil
 }
