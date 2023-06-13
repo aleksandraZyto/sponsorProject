@@ -8,9 +8,8 @@ import (
 )
 
 type RegisterRequest struct {
-	Username string `json:"username"`
-	Name     string `json:"name"`
-	Password string `json:"password"` // these have to be capital, otherwise body parser wont work
+	LoginData LoginRequest `json:loginData`
+	Name      string       `json:"name"`
 }
 
 type LoginRequest struct {
@@ -27,11 +26,11 @@ type UserHandlerStruct struct{}
 
 // IMPLEMENT ERROR TO RETURN
 func (handler *UserHandlerStruct) Register(req *RegisterRequest) models.User {
-	req.Password = base64.StdEncoding.EncodeToString([]byte(req.Password))
+	req.LoginData.Password = base64.StdEncoding.EncodeToString([]byte(req.LoginData.Password))
 	user := models.User{
 		Name:     req.Name,
-		Username: req.Username,
-		Password: req.Password,
+		Username: req.LoginData.Username,
+		Password: req.LoginData.Password,
 	}
 	database.DB.Db.Create(&user)
 	return user
