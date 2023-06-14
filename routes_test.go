@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRegister(t *testing.T) {
+func TestRegisterHappyPath(t *testing.T) {
 	req := handlers.RegisterRequest{
 		LoginData: handlers.LoginRequest{
 			Username: "ale",
@@ -18,4 +18,15 @@ func TestRegister(t *testing.T) {
 	}
 	writer := makeRequest("POST", "/register", req)
 	assert.Equal(t, http.StatusCreated, writer.Code)
+}
+
+func TestRegisterBadRequest(t *testing.T) {
+	req := handlers.RegisterRequest{
+		LoginData: handlers.LoginRequest{
+			Username: "ale",
+		},
+		Name: "aleksandra",
+	}
+	writer := makeRequest("POST", "/register", req)
+	assert.Equal(t, http.StatusBadRequest, writer.Code)
 }

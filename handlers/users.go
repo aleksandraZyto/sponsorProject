@@ -8,13 +8,13 @@ import (
 )
 
 type RegisterRequest struct {
-	LoginData LoginRequest `json:"loginData""`
-	Name      string       `json:"name"`
+	LoginData LoginRequest `json:"loginData" binding:"required"`
+	Name      string       `json:"name" binding:"required"`
 }
 
 type LoginRequest struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
 type UserHandler interface {

@@ -9,14 +9,14 @@ import (
 
 // TODO: return correct status codes
 func RegisterHandler(c *gin.Context) {
-	handler := &handlers.UserHandlerStruct{}
+	userHandler := &handlers.UserHandlerStruct{}
 	req := new(handlers.RegisterRequest)
 	if err := c.ShouldBindJSON(req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
 		return
 	}
-	user := handler.Register(req)
-	c.JSON(http.StatusCreated, gin.H{"user": user})
+	user := userHandler.Register(req)
+	c.JSON(http.StatusCreated, gin.H{"Created user:": user})
 }
 
 // TODO: return correct status codes
