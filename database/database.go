@@ -23,8 +23,10 @@ func ConnectDb() error {
 	pass := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
 	dbPort := os.Getenv("DB_PORT")
+	dbHost := os.Getenv("DB_HOST")
 	dsn := fmt.Sprintf(
-		"host=db user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai",
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai",
+		dbHost,
 		user,
 		pass,
 		dbName,
