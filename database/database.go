@@ -45,14 +45,11 @@ func ConnectDb() error {
 	}
 
 	log.Println("connected")
-
 	log.Println("running migrations")
 	db.AutoMigrate(&models.User{})
 
 	DB = Dbinstance{
-
 		Db: db,
 	}
-
 	return nil
 }

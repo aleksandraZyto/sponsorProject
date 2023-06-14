@@ -8,7 +8,7 @@ import (
 )
 
 type RegisterRequest struct {
-	LoginData LoginRequest `json:loginData`
+	LoginData LoginRequest `json:"loginData""`
 	Name      string       `json:"name"`
 }
 
