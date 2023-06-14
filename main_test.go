@@ -20,7 +20,7 @@ func TestMain(m *testing.M) {
 	gin.SetMode(gin.TestMode)
 	setup()
 	exitCode := m.Run()
-	teardown()
+	//teardown()
 
 	os.Exit(exitCode)
 }

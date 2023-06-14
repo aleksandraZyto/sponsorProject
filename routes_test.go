@@ -30,3 +30,23 @@ func TestRegisterBadRequest(t *testing.T) {
 	writer := makeRequest("POST", "/register", req)
 	assert.Equal(t, http.StatusBadRequest, writer.Code)
 }
+
+// run without teardown
+func TestLoginHappyPath(t *testing.T) {
+	req := handlers.LoginRequest{
+		Username: "ale",
+		Password: "1234",
+	}
+
+	writer := makeRequest("POST", "/login", req)
+	assert.Equal(t, http.StatusOK, writer.Code)
+}
+
+func TestLoginBadRequest(t *testing.T) {
+	req := handlers.LoginRequest{
+		Password: "1234",
+	}
+
+	writer := makeRequest("POST", "/login", req)
+	assert.Equal(t, http.StatusBadRequest, writer.Code)
+}
