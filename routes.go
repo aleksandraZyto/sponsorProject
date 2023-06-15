@@ -7,7 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// TODO: return correct status codes
 func RegisterHandler(c *gin.Context) {
 	userHandler := &handlers.UserHandlerStruct{}
 	req := new(handlers.RegisterRequest)
@@ -19,7 +18,6 @@ func RegisterHandler(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"Created user:": user})
 }
 
-// TODO: return correct status codes
 func LoginHandler(c *gin.Context) {
 	handler := &handlers.UserHandlerStruct{}
 	req := new(handlers.LoginRequest)
