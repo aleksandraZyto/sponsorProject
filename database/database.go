@@ -6,7 +6,6 @@ import (
 	"os"
 
 	models "chat-app/models"
-
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
