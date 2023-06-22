@@ -46,7 +46,7 @@ func ConnectDb() error {
 
 	log.Println("connected")
 	log.Println("running migrations")
-	db.AutoMigrate(&models.User{}, &models.Message{})
+	db.AutoMigrate(&models.User{}, &models.Message{}, &models.ChatRoom{})
 
 	DB = Dbinstance{
 		Db: db,
