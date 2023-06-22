@@ -14,8 +14,12 @@ func RegisterHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
 		return
 	}
-	user := userHandler.Register(req)
-	c.JSON(http.StatusCreated, gin.H{"Created user:": user})
+	user, err := userHandler.Register(req)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	} else {
+		c.JSON(http.StatusCreated, gin.H{"Created user:": user})
+	}
 }
 
 func LoginHandler(c *gin.Context) {

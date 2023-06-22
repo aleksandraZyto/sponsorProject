@@ -19,21 +19,25 @@ type LoginRequest struct {
 
 type UserHandler interface {
 	Register(req *RegisterRequest) models.User
-	Login(req *LoginRequest) error // why LG has to be a pointer? apparently non pointer breaks body parsing:/
+	Login(req *LoginRequest) error // why LR has to be a pointer? apparently non pointer breaks body parsing:/
 }
 
 type UserHandlerStruct struct{}
 
 // IMPLEMENT ERROR TO RETURN
-func (handler *UserHandlerStruct) Register(req *RegisterRequest) models.User {
+func (handler *UserHandlerStruct) Register(req *RegisterRequest) (models.User, error) {
 	req.LoginData.Password = base64.StdEncoding.EncodeToString([]byte(req.LoginData.Password))
 	user := models.User{
 		Name:     req.Name,
 		Username: req.LoginData.Username,
 		Password: req.LoginData.Password,
 	}
-	database.DB.Db.Create(&user)
-	return user
+	gormErr := database.DB.Db.Create(&user)
+	if gormErr.Error != nil {
+		err := errors.New("error when creating a user, username might be already taken")
+		return user, err
+	}
+	return user, nil
 }
 
 func (handler *UserHandlerStruct) Login(req *LoginRequest) error {
@@ -45,7 +49,7 @@ func (handler *UserHandlerStruct) Login(req *LoginRequest) error {
 	encodedPass := base64.StdEncoding.EncodeToString([]byte(req.Password))
 
 	if string(user.Password) != encodedPass {
-		return errors.New("Invalid password")
+		return errors.New("invalid password")
 	}
 	return nil
 }
