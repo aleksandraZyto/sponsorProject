@@ -5,8 +5,6 @@ import (
 	"log"
 	"os"
 	"time"
-
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -17,13 +15,4 @@ func main() {
 		os.Exit(1)
 	}
 	serveApplication()
-}
-
-func serveApplication() {
-	router := gin.Default()
-	router.POST("/register", RegisterHandler)
-	router.POST("/login", LoginHandler)
-
-	router.Run(":3000")
-	log.Println("Server running on port 3000")
 }

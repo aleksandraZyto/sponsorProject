@@ -1,34 +1,18 @@
 package main
 
 import (
-	handlers "chat-app/handlers"
-	"net/http"
+	"log"
+
+	service "chat-app/services"
 
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterHandler(c *gin.Context) {
-	userHandler := &handlers.UserHandlerStruct{}
-	req := new(handlers.RegisterRequest)
-	if err := c.ShouldBindJSON(req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
-		return
-	}
-	user := userHandler.Register(req)
-	c.JSON(http.StatusCreated, gin.H{"Created user:": user})
-}
+func serveApplication() {
+	router := gin.Default()
+	router.POST("/register", service.RegisterHandler)
+	router.POST("/login", service.LoginHandler)
 
-func LoginHandler(c *gin.Context) {
-	handler := &handlers.UserHandlerStruct{}
-	req := new(handlers.LoginRequest)
-	if err := c.ShouldBindJSON(req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	handlerErr := handler.Login(req)
-	if handlerErr != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": handlerErr.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{})
+	router.Run(":3000")
+	log.Println("Server running on port 3000")
 }
