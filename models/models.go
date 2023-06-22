@@ -7,22 +7,23 @@ import (
 
 type User struct {
 	gorm.Model
-	//UserId   string    `json:"userId" gorm:"unique"`
-	Username string    `json:"username" gorm:"unique"`
-	Name     string    `json:"name"`
-	Password string    `json:"password"`
-	Messages []Message `json:"messages" gorm:"foreignKey:Sender"`
+	Username  string      `json:"username" gorm:"unique"`
+	Name      string      `json:"name"`
+	Password  string      `json:"password"`
+	Messages  []Message   `json:"messages" gorm:"foreignKey:Sender"`
+	ChatRooms []*ChatRoom `json:"chatRooms" gorm:"many2many:user_chatRooms;"`
 }
 
 type Message struct {
 	gorm.Model
-	Sender uint
-	Text   string    `json:"text"`
-	SentAt time.Time `json:"sentAt"`
+	Sender   uint
+	Text     string    `json:"text"`
+	SentAt   time.Time `json:"sentAt"`
+	ChatRoom uint
 }
 
 type ChatRoom struct {
 	gorm.Model
-	//Participantqs []User    `json:"participants" gorm:"many2many:chatRoom_participants;"`
-	//Messages     []Message `json:"messages" gorm:"many2many:chatRoom_messages;"`
+	Participants []*User   `json:"participants" gorm:"many2many:user_chatRooms;"`
+	Messages     []Message `json:"messages" gorm:"foreignKey:ChatRoom"`
 }
