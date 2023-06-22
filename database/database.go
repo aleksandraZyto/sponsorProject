@@ -6,6 +6,7 @@ import (
 	"os"
 
 	models "chat-app/models"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -45,7 +46,7 @@ func ConnectDb() error {
 
 	log.Println("connected")
 	log.Println("running migrations")
-	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.User{}, &models.Message{})
 
 	DB = Dbinstance{
 		Db: db,
