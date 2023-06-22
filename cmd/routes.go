@@ -1,11 +1,9 @@
 package main
 
 import (
-	"log"
-
 	service "chat-app/services"
-
 	"github.com/gin-gonic/gin"
+	"log"
 )
 
 func serveApplication() {
