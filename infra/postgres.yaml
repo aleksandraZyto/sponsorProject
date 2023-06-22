@@ -7,3 +7,5 @@ postgres:
         value: oloslawus
       - key: POSTGRES_PASSWORD
         value: haslo
+      - key : POSTGRES_HOST
+        value: localhost

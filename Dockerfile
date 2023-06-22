@@ -7,4 +7,4 @@ RUN go mod tidy
 
 EXPOSE 3000
 
-CMD go run main.go routes.go -b 0.0.0.0
+CMD go run cmd/main.go cmd/routes.go -b 0.0.0.0

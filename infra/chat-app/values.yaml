@@ -4,11 +4,11 @@ app:
   replicaCount: 1
   container:
     image: aleksandrazyto/chat-app:latest
-    port: 8080
+    port: "3000"
     config: []
     env:
       - key: key
         value: value
   service:
     type: ClusterIP
-    port: 8080
+    port: "3000"
