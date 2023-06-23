@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"chat-app/models"
+	"chat-app/repos"
 	"chat-app/services"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -10,11 +11,12 @@ import (
 func RegisterHandler(c *gin.Context) {
 	userService := &services.UserHandlerStruct{}
 	req := new(models.RegisterRequest)
+	repo := repos.UserRepositoryStruct{}
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
 		return
 	}
-	user, err := userService.Register(req)
+	user, err := userService.Register(req, repo)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	} else {
@@ -25,12 +27,14 @@ func RegisterHandler(c *gin.Context) {
 func LoginHandler(c *gin.Context) {
 	userService := &services.UserHandlerStruct{}
 	req := new(models.LoginRequest)
+	repo := repos.UserRepositoryStruct{}
+
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	if err := userService.Login(req); err != nil {
+	if err := userService.Login(req, repo); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

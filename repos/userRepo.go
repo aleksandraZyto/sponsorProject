@@ -6,7 +6,14 @@ import (
 	"errors"
 )
 
-func GetUser(username string) (models.User, error) {
+type UserRepository interface {
+	GetUser(username string) (models.User, error)
+	AddUser(req *models.RegisterRequest) (models.User, error)
+}
+
+type UserRepositoryStruct struct{}
+
+func (repo UserRepositoryStruct) GetUser(username string) (models.User, error) {
 	user := models.User{}
 	if err := database.DB.Db.Where(
 		"username = ?", username).First(&user).Error; err != nil {
@@ -15,7 +22,7 @@ func GetUser(username string) (models.User, error) {
 	return user, nil
 }
 
-func AddUser(req *models.RegisterRequest) (models.User, error) {
+func (repo UserRepositoryStruct) AddUser(req *models.RegisterRequest) (models.User, error) {
 	user := models.User{
 		Name:     req.Name,
 		Username: req.LoginData.Username,

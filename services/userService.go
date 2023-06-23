@@ -13,14 +13,14 @@ type UserHandler interface {
 
 type UserHandlerStruct struct{}
 
-func (handler *UserHandlerStruct) Register(req *models.RegisterRequest) (models.User, error) {
+func (handler *UserHandlerStruct) Register(req *models.RegisterRequest, repo repos.UserRepository) (models.User, error) {
 	req.LoginData.Password = Encode(req.LoginData.Password)
 
-	return repos.AddUser(req)
+	return repo.AddUser(req)
 }
 
-func (handler *UserHandlerStruct) Login(req *models.LoginRequest) error {
-	user, err := repos.GetUser(req.Username)
+func (handler *UserHandlerStruct) Login(req *models.LoginRequest, repo repos.UserRepository) error {
+	user, err := repo.GetUser(req.Username)
 	if err != nil {
 		return err
 	}
