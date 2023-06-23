@@ -34,6 +34,6 @@ func LoginHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": handlerErr.Error()})
 		return
 	}
-	handler.SetUserCookie(c, req.Username)
+	SetUserCookie(c, req.Username)
 	c.JSON(http.StatusOK, gin.H{})
 }

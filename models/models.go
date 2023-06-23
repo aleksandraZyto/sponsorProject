@@ -27,5 +27,6 @@ type ChatRoom struct {
 	gorm.Model
 	Participants []*User   `json:"participants" gorm:"many2many:participant_chatRooms;"`
 	Messages     []Message `json:"messages" gorm:"foreignKey:ChatRoom"`
-	Creator      uint
+	// change creator type to user
+	Creator string
 }

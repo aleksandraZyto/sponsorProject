@@ -5,8 +5,9 @@ import (
 	models "chat-app/models"
 	"encoding/base64"
 	"errors"
-	"github.com/gin-gonic/gin"
 )
+
+//change the file name
 
 type RegisterRequest struct {
 	LoginData LoginRequest `json:"loginData" binding:"required"`
@@ -25,7 +26,6 @@ type UserHandler interface {
 
 type UserHandlerStruct struct{}
 
-// IMPLEMENT ERROR TO RETURN
 func (handler *UserHandlerStruct) Register(req *RegisterRequest) (models.User, error) {
 	req.LoginData.Password = base64.StdEncoding.EncodeToString([]byte(req.LoginData.Password))
 	user := models.User{
@@ -41,6 +41,7 @@ func (handler *UserHandlerStruct) Register(req *RegisterRequest) (models.User, e
 	return user, nil
 }
 
+// change methods here to find, craete and so on and extract the rest to the service
 func (handler *UserHandlerStruct) Login(req *LoginRequest) error {
 	user := models.User{}
 	if err := database.DB.Db.Where("username = ?", req.Username).First(&user).Error; err != nil {
@@ -53,11 +54,4 @@ func (handler *UserHandlerStruct) Login(req *LoginRequest) error {
 		return errors.New("invalid password")
 	}
 	return nil
-}
-
-func (handler *UserHandlerStruct) SetUserCookie(c *gin.Context, username string) {
-	_, err := c.Cookie("user") //TODO: Do we need this, what is this for
-	if err != nil {
-		c.SetCookie("user", username, 3600, "/", "127.0.0.1", false, false)
-	}
 }
