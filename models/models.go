@@ -7,11 +7,12 @@ import (
 
 type User struct {
 	gorm.Model
-	Username  string      `json:"username" gorm:"unique"`
-	Name      string      `json:"name"`
-	Password  string      `json:"password"`
-	Messages  []Message   `json:"messages" gorm:"foreignKey:Sender"`
-	ChatRooms []*ChatRoom `json:"chatRooms" gorm:"many2many:user_chatRooms;"`
+	Username       string      `json:"username" gorm:"unique"`
+	Name           string      `json:"name"`
+	Password       string      `json:"password"`
+	Messages       []Message   `json:"messages" gorm:"foreignKey:Sender"`
+	ChatRooms      []*ChatRoom `json:"chatRooms" gorm:"many2many:participant_chatRooms;"`
+	OwnedChatRooms []ChatRoom  `json:"ownedChatRoom" gorm:"foreignKey:Creator"`
 }
 
 type Message struct {
@@ -24,6 +25,7 @@ type Message struct {
 
 type ChatRoom struct {
 	gorm.Model
-	Participants []*User   `json:"participants" gorm:"many2many:user_chatRooms;"`
+	Participants []*User   `json:"participants" gorm:"many2many:participant_chatRooms;"`
 	Messages     []Message `json:"messages" gorm:"foreignKey:ChatRoom"`
+	Creator      uint
 }

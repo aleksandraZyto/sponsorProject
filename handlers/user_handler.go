@@ -56,11 +56,8 @@ func (handler *UserHandlerStruct) Login(req *LoginRequest) error {
 }
 
 func (handler *UserHandlerStruct) SetUserCookie(c *gin.Context, username string) {
-	cookie, err := c.Cookie("user") //TODO: Do we need this, what is this for
+	_, err := c.Cookie("user") //TODO: Do we need this, what is this for
 	if err != nil {
 		c.SetCookie("user", username, 3600, "/", "127.0.0.1", false, false)
-		c.JSON(200, gin.H{"msg": "cookie set successfully"})
-	} else {
-		c.JSON(200, gin.H{"msg": cookie})
 	}
 }
