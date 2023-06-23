@@ -30,3 +30,13 @@ type ChatRoom struct {
 	// change creator type to user
 	Creator string
 }
+
+type RegisterRequest struct {
+	LoginData LoginRequest `json:"loginData" binding:"required"`
+	Name      string       `json:"name" binding:"required"`
+}
+
+type LoginRequest struct {
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}

@@ -1,39 +1,33 @@
 package services
 
 import (
-	"chat-app/handlers"
-	"net/http"
-
-	"github.com/gin-gonic/gin"
+	"chat-app/models"
+	"chat-app/repos"
+	"errors"
 )
 
-func RegisterHandler(c *gin.Context) {
-	userHandler := &handlers.UserHandlerStruct{}
-	req := new(handlers.RegisterRequest)
-	if err := c.ShouldBindJSON(req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
-		return
-	}
-	user, err := userHandler.Register(req)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-	} else {
-		c.JSON(http.StatusCreated, gin.H{"Created user:": user})
-	}
+type UserHandler interface {
+	Register(req *models.RegisterRequest) models.User
+	Login(req *models.LoginRequest) error // why LR has to be a pointer? apparently non pointer breaks body parsing:/
 }
 
-func LoginHandler(c *gin.Context) {
-	handler := &handlers.UserHandlerStruct{}
-	req := new(handlers.LoginRequest)
-	if err := c.ShouldBindJSON(req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+type UserHandlerStruct struct{}
+
+func (handler *UserHandlerStruct) Register(req *models.RegisterRequest) (models.User, error) {
+	req.LoginData.Password = Encode(req.LoginData.Password)
+
+	return repos.AddUser(req)
+}
+
+func (handler *UserHandlerStruct) Login(req *models.LoginRequest) error {
+	user, err := repos.GetUser(req.Username)
+	if err != nil {
+		return err
 	}
-	handlerErr := handler.Login(req)
-	if handlerErr != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": handlerErr.Error()})
-		return
+
+	encodedPass := Encode(req.Password)
+	if string(user.Password) != encodedPass {
+		return errors.New("invalid password")
 	}
-	SetUserCookie(c, req.Username)
-	c.JSON(http.StatusOK, gin.H{})
+	return nil
 }

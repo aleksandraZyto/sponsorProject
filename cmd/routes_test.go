@@ -1,7 +1,7 @@
 package main
 
 import (
-	"chat-app/handlers"
+	"chat-app/services"
 	"net/http"
 	"testing"
 
@@ -9,8 +9,8 @@ import (
 )
 
 func TestRegisterHappyPath(t *testing.T) {
-	req := handlers.RegisterRequest{
-		LoginData: handlers.LoginRequest{
+	req := services.RegisterRequest{
+		LoginData: services.LoginRequest{
 			Username: "ale",
 			Password: "1234",
 		},
@@ -21,8 +21,8 @@ func TestRegisterHappyPath(t *testing.T) {
 }
 
 func TestRegisterBadRequest(t *testing.T) {
-	req := handlers.RegisterRequest{
-		LoginData: handlers.LoginRequest{
+	req := services.RegisterRequest{
+		LoginData: services.LoginRequest{
 			Username: "ale",
 		},
 		Name: "aleksandra",
@@ -33,7 +33,7 @@ func TestRegisterBadRequest(t *testing.T) {
 
 // run without teardown
 func TestLoginHappyPath(t *testing.T) {
-	req := handlers.LoginRequest{
+	req := services.LoginRequest{
 		Username: "ale",
 		Password: "1234",
 	}
@@ -43,7 +43,7 @@ func TestLoginHappyPath(t *testing.T) {
 }
 
 func TestLoginBadRequest(t *testing.T) {
-	req := handlers.LoginRequest{
+	req := services.LoginRequest{
 		Password: "1234",
 	}
 
