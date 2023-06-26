@@ -7,7 +7,7 @@ import (
 )
 
 type UserRepository interface {
-	GetUser(username string) (models.User, error)
+	GetUser(username string) (models.User, error) // TODO: Name "encodedPassword"
 	AddUser(req *models.RegisterRequest) (models.User, error)
 }
 
@@ -24,9 +24,9 @@ func (repo UserRepositoryStruct) GetUser(username string) (models.User, error) {
 
 func (repo UserRepositoryStruct) AddUser(req *models.RegisterRequest) (models.User, error) {
 	user := models.User{
-		Name:     req.Name,
-		Username: req.LoginData.Username,
-		Password: req.LoginData.Password,
+		Name:            req.Name,
+		Username:        req.LoginData.Username,
+		EncodedPassword: req.LoginData.Password,
 	}
 
 	if gormErr := database.DB.Db.Create(&user); gormErr.Error != nil {

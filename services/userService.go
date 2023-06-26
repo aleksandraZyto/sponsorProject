@@ -26,7 +26,7 @@ func (handler *UserHandlerStruct) Login(req *models.LoginRequest, repo repos.Use
 	}
 
 	encodedPass := Encode(req.Password)
-	if string(user.Password) != encodedPass {
+	if string(user.EncodedPassword) != encodedPass {
 		return errors.New("invalid password")
 	}
 	return nil
