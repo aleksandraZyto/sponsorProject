@@ -39,7 +39,6 @@ func (repo *Repo) GetUser(username string) (models.User, error) {
 
 func TestUserHandlerStruct_RegisterHappyPath(t *testing.T) {
 	repository := &Repo{}
-	user := UserHandlerStruct{}
 	req := models.RegisterRequest{}
 	expectedNewUser := models.User{
 		Name:            "Aleksandra",
@@ -47,7 +46,7 @@ func TestUserHandlerStruct_RegisterHappyPath(t *testing.T) {
 		EncodedPassword: "123",
 	}
 
-	actualNewUser, err := user.Register(&req, repository)
+	actualNewUser, err := Register(&req, repository)
 
 	if err != nil {
 		t.Errorf("Error is not nil: %v", err.Error())
@@ -65,13 +64,12 @@ func TestUserHandlerStruct_RegisterHappyPath(t *testing.T) {
 
 func TestUserHandlerStruct_LoginHappyPath(t *testing.T) {
 	repository := &Repo{}
-	user := UserHandlerStruct{}
 	req := models.LoginRequest{
 		Username: "olka",
 		Password: "456",
 	}
 
-	err := user.Login(&req, repository)
+	err := Login(&req, repository)
 
 	if err != nil {
 		t.Errorf("Error is not nil: %v", err.Error())
@@ -86,13 +84,12 @@ func TestUserHandlerStruct_LoginHappyPath(t *testing.T) {
 
 func TestUserHandlerStruct_LoginInvalidPasswordPath(t *testing.T) {
 	repository := &Repo{}
-	user := UserHandlerStruct{}
 	req := models.LoginRequest{
 		Username: "olka",
 		Password: "123",
 	}
 
-	err := user.Login(&req, repository)
+	err := Login(&req, repository)
 	fmt.Println("Err: ", err)
 
 	if err != nil {

@@ -9,14 +9,13 @@ import (
 )
 
 func RegisterHandler(c *gin.Context) {
-	userService := &services.UserHandlerStruct{}
 	req := new(models.RegisterRequest)
 	repo := repos.UserRepositoryStruct{}
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
 		return
 	}
-	user, err := userService.Register(req, repo)
+	user, err := services.Register(req, repo)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	} else {
@@ -25,7 +24,6 @@ func RegisterHandler(c *gin.Context) {
 }
 
 func LoginHandler(c *gin.Context) {
-	userService := &services.UserHandlerStruct{}
 	req := new(models.LoginRequest)
 	repo := repos.UserRepositoryStruct{}
 
@@ -34,7 +32,7 @@ func LoginHandler(c *gin.Context) {
 		return
 	}
 
-	if err := userService.Login(req, repo); err != nil {
+	if err := services.Login(req, repo); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
