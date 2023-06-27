@@ -6,9 +6,18 @@ import (
 	"errors"
 )
 
+type Registerer interface {
+	WrapperRegister(req *models.RegisterRequest, repo repos.UserRepository) (models.User, error)
+}
+
+type RegistererStruct struct{}
+
+func (r RegistererStruct) WrapperRegister(req *models.RegisterRequest, repo repos.UserRepository) (models.User, error) {
+	return Register(req, repo)
+}
+
 func Register(req *models.RegisterRequest, repo repos.UserRepository) (models.User, error) {
 	req.LoginData.Password = Encode(req.LoginData.Password)
-
 	return repo.AddUser(req)
 }
 

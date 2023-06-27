@@ -9,7 +9,7 @@ import (
 
 func serveApplication() {
 	router := gin.Default()
-	router.POST("/register", service.RegisterHandler)
+	router.POST("/register", service.RegisterRequestReceiver)
 	router.POST("/login", service.LoginHandler)
 	router.POST("/createChatRoom", handler.CreateChatRoom)
 
