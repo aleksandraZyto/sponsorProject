@@ -33,7 +33,7 @@ func ConnectDb() error {
 		dbPort,
 	)
 
-	fmt.Println("DSN:", dsn)
+	log.Println("DSN:", dsn)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
