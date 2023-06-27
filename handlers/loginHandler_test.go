@@ -27,8 +27,13 @@ func (lsm LoggerStructMock) WrapperLogin(req *models.LoginRequest, repo repos.Us
 }
 
 func TestRegisterHandler_HappyPath(t *testing.T) {
+	expectedNewUser := models.User{
+		Username:        "Olka",
+		EncodedPassword: "1111",
+		Name:            "Alex",
+	}
 	RegisterMock = func(req *models.RegisterRequest, repo repos.UserRepository) (models.User, error) {
-		return models.User{}, nil
+		return expectedNewUser, nil
 	}
 	registerReq := &models.RegisterRequest{
 		LoginData: models.LoginRequest{
@@ -45,10 +50,14 @@ func TestRegisterHandler_HappyPath(t *testing.T) {
 
 	RegisterHandler(c, &RegistererStructMock{})
 
+	actualNewUser := models.User{}
+	json.Unmarshal([]byte(recorder.Body.String()), &actualNewUser)
+
+	assert.Equal(t, expectedNewUser, actualNewUser)
 	assert.Equal(t, http.StatusCreated, recorder.Code)
 }
 
-func TestRegisterHandler_BadRequest(t *testing.T) {
+func TestRegisterHandler_TakenUsername(t *testing.T) {
 	RegisterMock = func(req *models.RegisterRequest, repo repos.UserRepository) (models.User, error) {
 		return models.User{}, errors.New("error when creating a user, username might be already taken")
 	}
@@ -58,6 +67,29 @@ func TestRegisterHandler_BadRequest(t *testing.T) {
 			Password: "1111",
 		},
 		Name: "Alex",
+	}
+	recorder := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(recorder)
+	jsonValue, _ := json.Marshal(registerReq)
+	req, _ := http.NewRequest("POST", "/register", bytes.NewBuffer(jsonValue))
+	c.Request = req
+
+	RegisterHandler(c, &RegistererStructMock{})
+
+	actualErr := recorder.Body.String()
+	expectedErr := "\"error when creating a user, username might be already taken\""
+
+	assert.Equal(t, expectedErr, actualErr)
+	assert.Equal(t, http.StatusBadRequest, recorder.Code)
+}
+
+func TestRegisterHandler_BadRequest(t *testing.T) {
+	RegisterMock = func(req *models.RegisterRequest, repo repos.UserRepository) (models.User, error) {
+		return models.User{}, nil
+	}
+	registerReq := &models.LoginRequest{
+		Username: "Olka",
+		Password: "1111",
 	}
 	recorder := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(recorder)
@@ -87,4 +119,45 @@ func TestLoginHandler_HappyPath(t *testing.T) {
 	LoginHandler(c, &LoggerStructMock{})
 
 	assert.Equal(t, http.StatusOK, recorder.Code)
+}
+
+func TestLoginHandler_InvalidPassPath(t *testing.T) {
+	LoginMock = func(req *models.LoginRequest, repo repos.UserRepository) error {
+		return errors.New("invalid password")
+	}
+	loginReq := &models.LoginRequest{
+		Username: "Olka",
+		Password: "x",
+	}
+	recorder := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(recorder)
+	jsonValue, _ := json.Marshal(loginReq)
+	req, _ := http.NewRequest("POST", "/login", bytes.NewBuffer(jsonValue))
+	c.Request = req
+
+	LoginHandler(c, &LoggerStructMock{})
+
+	actualErr := recorder.Body.String()
+	expectedErr := "\"invalid password\""
+
+	assert.Equal(t, expectedErr, actualErr)
+	assert.Equal(t, http.StatusBadRequest, recorder.Code)
+}
+
+func TestLoginHandler_BadRequest(t *testing.T) {
+	LoginMock = func(req *models.LoginRequest, repo repos.UserRepository) error {
+		return nil
+	}
+	loginReq := &models.LoginRequest{
+		Username: "Olka",
+	}
+	recorder := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(recorder)
+	jsonValue, _ := json.Marshal(loginReq)
+	req, _ := http.NewRequest("POST", "/login", bytes.NewBuffer(jsonValue))
+	c.Request = req
+
+	LoginHandler(c, &LoggerStructMock{})
+
+	assert.Equal(t, http.StatusBadRequest, recorder.Code)
 }
