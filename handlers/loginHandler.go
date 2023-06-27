@@ -12,6 +12,10 @@ func RegisterRequestReceiver(c *gin.Context) {
 	RegisterHandler(c, services.RegistererStruct{})
 }
 
+func LoginRequestReceiver(c *gin.Context) {
+	LoginHandler(c, services.LoggerStruct{})
+}
+
 func RegisterHandler(c *gin.Context, r services.Registerer) {
 	req := new(models.RegisterRequest)
 	repo := repos.UserRepositoryStruct{}
@@ -27,7 +31,7 @@ func RegisterHandler(c *gin.Context, r services.Registerer) {
 	}
 }
 
-func LoginHandler(c *gin.Context) {
+func LoginHandler(c *gin.Context, l services.Logger) {
 	req := new(models.LoginRequest)
 	repo := repos.UserRepositoryStruct{}
 
@@ -35,7 +39,7 @@ func LoginHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	if err := services.Login(req, repo); err != nil {
+	if err := l.WrapperLogin(req, repo); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

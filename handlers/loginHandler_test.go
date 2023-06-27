@@ -13,16 +13,21 @@ import (
 	"testing"
 )
 
-var WrapperRegisterMock func(req *models.RegisterRequest, repo repos.UserRepository) (models.User, error)
-
 type RegistererStructMock struct{}
+type LoggerStructMock struct{}
+
+var RegisterMock func(req *models.RegisterRequest, repo repos.UserRepository) (models.User, error)
+var LoginMock func(req *models.LoginRequest, repo repos.UserRepository) error
 
 func (rsm RegistererStructMock) WrapperRegister(req *models.RegisterRequest, repo repos.UserRepository) (models.User, error) {
-	return WrapperRegisterMock(req, repo)
+	return RegisterMock(req, repo)
+}
+func (lsm LoggerStructMock) WrapperLogin(req *models.LoginRequest, repo repos.UserRepository) error {
+	return LoginMock(req, repo)
 }
 
 func TestRegisterHandler_HappyPath(t *testing.T) {
-	WrapperRegisterMock = func(req *models.RegisterRequest, repo repos.UserRepository) (models.User, error) {
+	RegisterMock = func(req *models.RegisterRequest, repo repos.UserRepository) (models.User, error) {
 		return models.User{}, nil
 	}
 	registerReq := &models.RegisterRequest{
@@ -44,7 +49,7 @@ func TestRegisterHandler_HappyPath(t *testing.T) {
 }
 
 func TestRegisterHandler_BadRequest(t *testing.T) {
-	WrapperRegisterMock = func(req *models.RegisterRequest, repo repos.UserRepository) (models.User, error) {
+	RegisterMock = func(req *models.RegisterRequest, repo repos.UserRepository) (models.User, error) {
 		return models.User{}, errors.New("error when creating a user, username might be already taken")
 	}
 	registerReq := &models.RegisterRequest{
@@ -63,4 +68,23 @@ func TestRegisterHandler_BadRequest(t *testing.T) {
 	RegisterHandler(c, &RegistererStructMock{})
 
 	assert.Equal(t, http.StatusBadRequest, recorder.Code)
+}
+
+func TestLoginHandler_HappyPath(t *testing.T) {
+	LoginMock = func(req *models.LoginRequest, repo repos.UserRepository) error {
+		return nil
+	}
+	loginReq := &models.LoginRequest{
+		Username: "Olka",
+		Password: "1111",
+	}
+	recorder := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(recorder)
+	jsonValue, _ := json.Marshal(loginReq)
+	req, _ := http.NewRequest("POST", "/login", bytes.NewBuffer(jsonValue))
+	c.Request = req
+
+	LoginHandler(c, &LoggerStructMock{})
+
+	assert.Equal(t, http.StatusOK, recorder.Code)
 }

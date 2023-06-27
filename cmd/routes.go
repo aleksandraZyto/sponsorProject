@@ -10,7 +10,7 @@ import (
 func serveApplication() {
 	router := gin.Default()
 	router.POST("/register", service.RegisterRequestReceiver)
-	router.POST("/login", service.LoginHandler)
+	router.POST("/login", service.LoginRequestReceiver)
 	router.POST("/createChatRoom", handler.CreateChatRoom)
 
 	router.Run(":3000")
