@@ -7,9 +7,10 @@ type ChatRoomCreatorStruct struct {
 }
 
 type ChatRoomCreator interface {
-	CreateChatRoomWrapper(req *models.CreateChatRoomRequest) models.ChatRoom
+	CreateChatRoomWrapper(req *models.CreateChatRoomRequest) (models.ChatRoom, error)
 }
 
-func (crcs ChatRoomCreatorStruct) CreateChatRoomWrapper(_ *models.CreateChatRoomRequest) models.ChatRoom { //TODO: Implement error
-	return models.ChatRoom{}
+func (crcs ChatRoomCreatorStruct) CreateChatRoomWrapper(_ *models.CreateChatRoomRequest) (models.ChatRoom, error) { // TODO: Return an explicit error
+	// CreateChatRoom()
+	return models.ChatRoom{}, nil
 }

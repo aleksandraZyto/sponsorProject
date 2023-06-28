@@ -3,6 +3,7 @@ package handlers
 import (
 	"chat-app/models"
 	"chat-app/services"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -22,6 +23,11 @@ func CreateChatRoomHandler(c *gin.Context, chatRoomCreator services.ChatRoomCrea
 		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
 		return
 	}
-	chatRoom := chatRoomCreator.CreateChatRoomWrapper(req)
+	chatRoom, err := chatRoomCreator.CreateChatRoomWrapper(req)
+	fmt.Println("err in impl:", err)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
 	c.JSON(http.StatusCreated, chatRoom)
 }
