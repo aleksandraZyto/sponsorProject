@@ -10,6 +10,7 @@ import (
 
 func CreateChatRoomReceiver(c *gin.Context) {
 	cookieUser, err := GetUserCookie(c)
+	fmt.Println("Cookie's here: ", cookieUser)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "User not logged in. " + err.Error()})
 		return
@@ -24,7 +25,6 @@ func CreateChatRoomHandler(c *gin.Context, chatRoomCreator services.ChatRoomCrea
 		return
 	}
 	chatRoom, err := chatRoomCreator.CreateChatRoomWrapper(req)
-	fmt.Println("err in impl:", err)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
