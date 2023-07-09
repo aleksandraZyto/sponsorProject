@@ -1,0 +1,11 @@
+postgres:
+    config:
+        data:
+            - key: POSTGRES_DB
+              value: chat-app
+            - key: POSTGRES_USER
+              value: oloslawus
+            - key: POSTGRES_PASSWORD
+              value: haslo
+            - key: POSTGRES_HOST
+              value: localhost
