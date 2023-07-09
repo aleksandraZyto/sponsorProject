@@ -22,7 +22,7 @@ spec:
             claimName: postgres-persistent-volume-claim
       containers:
         - name: postgres
-          image: postgres:alpine
+          image: postgres:9.6-alpine
           ports:
             - containerPort: 5432
           envFrom:

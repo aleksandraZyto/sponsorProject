@@ -8,3 +8,4 @@ data:
   POSTGRES_DB: chat-app
   POSTGRES_USER: oloslawus
   POSTGRES_PASSWORD: haslo
+  POSTGRES_HOST: locahost
