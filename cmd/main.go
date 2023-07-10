@@ -1,7 +1,7 @@
 package main
 
 import (
-	database "chat-app/database"
+	"chat-app/database"
 	"log"
 	"os"
 	"time"
